@@ -1,66 +1,55 @@
-%% EPD 6: Machine Learning – Regresión
+%% Homework 1
 
-%% Initialization
+%% Inicializaci�n
 clear ; close all; clc
 
-%% ======================= EJ1. Cargar y visualizar =======================
+fprintf('Loading Data ...\n');
 
-fprintf('Loading Data ...\n')
+data = csvread('autos.csv');
+X=data(:,1:7);
+y=data(:,8);
 
+% ======================= Ejercicio 1: Estad�sticas ============================
 
-data = load('ex1data1.txt');
-X=data(:,1);
-y=data(:,2);
+fprintf('Estadisticas: \n');
 
-m = length(y);
-
-% Plot Data
-% Note: You have to complete the code in plotData.m
-
-fprintf('Plotting Data ...\n')
-plotData(X, y);
+[xMean, xSTD, xMin, xMax] = estadisticas(data);
 
 fprintf('Program paused. Press enter to continue.\n');
 pause;
 
-%% =================== EJ2.Función de coste ===================
-fprintf('Running Cost Function ...\n')
+% ======================= Ejercicio 2: Modelo de regresi�n =====================
 
-% Some gradient descent settings
-% Añada una columna con todos sus elementos a 1 a la matriz X como primera columna, e inicializar los parámetros theta a 0
+fprintf('Creando conjunto de test y de trainig: \n\n');
 
-X = [ones(m,1),X];
-theta = zeros(2,1);
+[testCmp, trainigCmp] = testTraining(data);
 
-% compute and display initial cost
-computeCost(X, y, theta)
+trainigX = trainigCmp(:,1:7);
+trainigY = trainigCmp(:,8);
 
-%% =================== EJ3.Gradiente ===================
-% run gradient descent
-fprintf('Running Gradient Descent ...\n')
+testX = testCmp(:,1:7);
+testY = testCmp(:,8);
 
-% Some gradient descent settings
-% alpha 0.01 y 1500 como número de iteraciones
+fprintf('Calculando thetas: \n\n');
 
-alpha = 0.01;
-iterations = 1500;
+[thetaDes, thetaPeso, thetaAcel, theta] = normalEqn(trainigX,trainigY);
 
-[theta, J_history] = gradientDescent(X, y, theta, alpha, iterations);
+fprintf('Calculando y mostrando errores: \n\n');
 
-% print theta to screen
-
-
-
-%% =================== EJ4.Visualización ===================
-
-% Plot the linear fit
-% keep previous plot visible
-
-
-% don't overlay any more plots on this figure
-
-
-% Predict values for population sizes of 35,000 and 70,000
+JDes = computeCost(testX, testY, thetaDes)
+  
+JPeso = computeCost(testX, testY, thetaPeso)
+  
+JAcel = computeCost(testX, testY, thetaAcel)
+  
+J = computeCost(testX, testY, theta)
 
 fprintf('Program paused. Press enter to continue.\n');
 pause;
+
+% ======================= Ejercicio 3: Graficas ================================
+
+visualizandoDatos(data, thetaDes, thetaPeso, thetaAcel, theta);
+
+
+
