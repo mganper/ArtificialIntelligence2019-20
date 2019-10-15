@@ -18,11 +18,10 @@ function visualizandoDatos(data, thetaDes, thetaPeso, thetaAcel, theta)
 
   
   subplot(2,2,2); 
-  plot(xUSA(:,2), yUSA, 'rx',";USA;", xEUR(:,2), yEUR, 'gx',";EUR;", xJAP(:,2), yJAP, 'bx',";JAP;");
+  plot(xUSA(:,2), yUSA, 'rx', xEUR(:,2), yEUR, 'gx', xJAP(:,2), yJAP, 'bx');
   ylabel('MPG');
   xlabel('Desplazamiento');
-  
-  legend("position", "northeast");
+  legend({"USA","EUR","JAP"}, "position", "northeast");
   
   subplot(2,2,3); 
   plot(xUSA(:,4), yUSA, 'rx', xEUR(:,4), yEUR, 'gx', xJAP(:,4), yJAP, 'bx');
