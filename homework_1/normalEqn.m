@@ -1,8 +1,8 @@
 function [thetaDes, thetaPeso, thetaAcel, theta] = normalEqn(X,y)
 
-  X1 = X(:,2);
-  X2 = X(:,4);
-  X3 = X(:,5);
+  X1 = X(:,3);
+  X2 = X(:,5);
+  X3 = X(:,6);
 
   thetaDes = ((X1' * X1)^(-1)) * X1' * y;
   
