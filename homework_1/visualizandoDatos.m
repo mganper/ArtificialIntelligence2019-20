@@ -23,18 +23,18 @@ function visualizandoDatos(data, thetaDes, thetaPeso, thetaAcel, theta)
 
   
   subplot(2,2,2); 
-  plot(xUSA(:,2), yUSA, 'rx', xEUR(:,2), yEUR, 'gx', xJAP(:,2), yJAP, 'bx', repDes);
+  plot(xUSA(:,2), yUSA, 'rx', xEUR(:,2), yEUR, 'gx', xJAP(:,2), yJAP, 'bx', repDes, 'b-');
   ylabel('MPG');
   xlabel('Desplazamiento');
   legend("USA","EUR","JAP");
   
   subplot(2,2,3); 
-  plot(xUSA(:,4), yUSA, 'rx', xEUR(:,4), yEUR, 'gx', xJAP(:,4), yJAP, 'bx');
+  plot(xUSA(:,4), yUSA, 'rx', xEUR(:,4), yEUR, 'gx', xJAP(:,4), yJAP, 'bx', repPeso, 'b-');
   ylabel('MPG');
   xlabel('Peso');
   
   subplot(2,2,4); 
-  plot(xUSA(:,5), yUSA, 'rx', xEUR(:,5), yEUR, 'gx', xJAP(:,5), yJAP, 'bx');
+  plot(xUSA(:,5), yUSA, 'rx', xEUR(:,5), yEUR, 'gx', xJAP(:,5), yJAP, 'bx', repAcel, 'b-');
   ylabel('MPG');
   xlabel('Aceleracion');
   
