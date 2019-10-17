@@ -36,6 +36,9 @@ fprintf('Calculando thetas: \n\n');
 [a,b] = size(testX);
 
 testX = [ones(a,1) testX];
+
+[trainingX mu sigma] = normalize(trainingX);
+
 trainingX = [ones(m,1) trainingX];
 
 theta = zeros(n+1, 1);
@@ -63,33 +66,54 @@ visualizandoDatos(data, thetaDes, thetaPeso, thetaAcel, theta);
 
 fprintf('Calculando thetas: \n\n');
 
-alpha = 0.03;
-iterations = 100;
+%Normalizar datos
+
+
+
+%================
+
+alpha = 0.05;
+iterations = 300;
 
 theta0 = zeros(n+1,1);
-thetaDes0 = zeros(n+1,1);
-thetaPeso0 = zeros(n+1,1);
-thetaAcel0 = zeros(n+1,1); 
+thetaDes0 = zeros(1,1);
+thetaPeso0 = zeros(1,1);
+thetaAcel0 = zeros(1,1); 
 
 [theta0, J_history] = gradientDescent(trainingX, trainingY, theta0, alpha, iterations);
-[thetaDes0, J_historyDes] = gradientDescent(trainingX, trainingY, thetaDes0, alpha, iterations);
-[thetaPeso0, J_historyPeso] = gradientDescent(trainingX, trainingY, thetaPeso0, alpha, iterations);
-[thetaAcel0, J_historyAcel] = gradientDescent(trainingX, trainingY, thetaAcel0, alpha, iterations);
+[thetaDes0, J_historyDes] = gradientDescent(trainingX(:,3), trainingY, thetaDes0, alpha, iterations);
+[thetaPeso0, J_historyPeso] = gradientDescent(trainingX(:,5), trainingY, thetaPeso0, alpha, iterations);
+[thetaAcel0, J_historyAcel] = gradientDescent(trainingX(:,6), trainingY, thetaAcel0, alpha, iterations);
 
-%plot(J_history);
+figure;
+plot(1:numel(J_history), J_history, '-b','LineWidth',2);
+xlabel('Number of iterations');
+ylabel('Cost J');
 
-theta0
-thetaDes0
-thetaPeso0
-thetaAcel0
+%theta0
+%thetaDes0
+%thetaPeso0
+%thetaAcel0
 
 fprintf('Calculando y mostrando errores: \n\n');
 
-JDes = computeCost(testX, testY, thetaDes0)
-  
-JPeso = computeCost(testX, testY, thetaPeso0)
-  
-JAcel = computeCost(testX, testY, thetaAcel0)
+%JDes0 = computeCost(testX, testY, thetaDes0);
+JDes0 = J_historyDes(end);  
 
-J = computeCost(testX, testY, theta0)
+JPeso0 = computeCost(testX, testY, thetaPeso0);
+  
+JAcel0 = computeCost(testX, testY, thetaAcel0);
 
+J0 = computeCost(testX, testY, theta0);
+
+JDes
+JDes0
+
+JPeso
+JPeso0
+
+JAcel
+JAcel0
+
+J
+J0
