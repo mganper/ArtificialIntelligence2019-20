@@ -57,7 +57,7 @@ pause;
 
 % ======================= Ejercicio 3: Graficas ================================
 
-%visualizandoDatos(data, thetaDes, thetaPeso, thetaAcel, theta);
+visualizandoDatos(data, thetaDes, thetaPeso, thetaAcel, theta);
 
 % ======================= Ejercicio 4: Descenso del Gradiente ==================
 

@@ -20,7 +20,6 @@ function visualizandoDatos(data, thetaDes, thetaPeso, thetaAcel, theta)
   subplot(2,2,1); 
   hist (data(:,8), '-b');
   xlabel('MPG');
-
   
   subplot(2,2,2); 
   plot(xUSA(:,2), yUSA, 'rx', xEUR(:,2), yEUR, 'gx', xJAP(:,2), yJAP, 'bx', repDes, 'b-');
