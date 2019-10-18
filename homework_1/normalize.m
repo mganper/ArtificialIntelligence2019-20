@@ -1,9 +1,8 @@
-function [X mu sigma] = normalize(X)
-  mu = zeros(1, size(X, 2));
-  sigma = zeros(1, size(X, 2));
-  
-  m = size(X, 1);
-  
+function X = normalize(X)
+  [m, n] = size(X);
+  mu = zeros(1, n);
+  sigma = zeros(1, n);
+    
   mu = mean(X);
   sigma = std(X);
   
