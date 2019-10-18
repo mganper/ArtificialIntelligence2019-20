@@ -11,11 +11,7 @@ function visualizandoDatos(data, thetaDes, thetaPeso, thetaAcel, theta)
   JAP = data(find(data(:,7) == 3),:);
   xJAP = JAP(:,1:7);
   yJAP = JAP(:,8);
-  
-  repDes = thetaDes * data(:,2);
-  repPeso = thetaPeso * data(:,4);
-  repAcel = thetaAcel * data(:,5);
-  
+    
   [m,n] = size(data(:,1:7));
   X = [ones(m, 1) data(:,1:7)];
 
@@ -27,7 +23,7 @@ function visualizandoDatos(data, thetaDes, thetaPeso, thetaAcel, theta)
   subplot(2,2,2); 
   plot(xUSA(:,2), yUSA, 'rx', xEUR(:,2), yEUR, 'gx', xJAP(:,2), yJAP, 'bx');
   hold on;
-  plot(X(:,3), thetaDes*X(:,3), "b-");
+  plot(X(:,3), [ones(size(data),1) data(:,2)] * thetaDes, "b-");
   ylabel('MPG');
   xlabel('Desplazamiento');
   legend("USA","EUR","JAP");
@@ -36,14 +32,14 @@ function visualizandoDatos(data, thetaDes, thetaPeso, thetaAcel, theta)
   subplot(2,2,3); 
   plot(xUSA(:,4), yUSA, 'rx', xEUR(:,4), yEUR, 'gx', xJAP(:,4), yJAP, 'bx');
   hold on;
-  plot(X(:,5), thetaPeso*X(:,5), "b-");
+  plot(X(:,5), [ones(size(data),1) data(:,4)] * thetaPeso, "b-");
   ylabel('MPG');
   xlabel('Peso');
   
   subplot(2,2,4); 
   plot(xUSA(:,5), yUSA, 'rx', xEUR(:,5), yEUR, 'gx', xJAP(:,5), yJAP, 'bx');
   hold on;
-  plot(X(:,6), thetaAcel*X(:,6), "b-");
+  plot(X(:,6), [ones(size(data),1) data(:,5)] * thetaAcel, "b-");
   ylabel('MPG');
   xlabel('Aceleracion');
   

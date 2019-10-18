@@ -37,8 +37,6 @@ fprintf('Calculando thetas: \n\n');
 
 testX = [ones(a,1) testX];
 
-[trainingX mu sigma] = normalize(trainingX);
-
 trainingX = [ones(m,1) trainingX];
 
 theta = zeros(n+1, 1);
@@ -47,11 +45,11 @@ theta = zeros(n+1, 1);
 
 fprintf('Calculando y mostrando errores: \n\n');
 
-JDes = computeCost(testX, testY, thetaDes)
+JDes = computeCost([ones(a,1) testX(:,3)], testY, thetaDes)
   
-JPeso = computeCost(testX, testY, thetaPeso)
+JPeso = computeCost([ones(a,1) testX(:,5)], testY, thetaPeso)
   
-JAcel = computeCost(testX, testY, thetaAcel)
+JAcel = computeCost([ones(a,1) testX(:,6)], testY, thetaAcel)
   
 J = computeCost(testX, testY, theta)
 
@@ -66,29 +64,20 @@ visualizandoDatos(data, thetaDes, thetaPeso, thetaAcel, theta);
 
 fprintf('Calculando thetas: \n\n');
 
-%Normalizar datos
-
-
-
-%================
-
 alpha = 0.05;
 iterations = 300;
 
+[trainingX mu sigma] = normalize(trainingX);
+
 theta0 = zeros(n+1,1);
-thetaDes0 = zeros(1,1);
-thetaPeso0 = zeros(1,1);
-thetaAcel0 = zeros(1,1); 
+thetaDes0 = zeros(2,1);
+thetaPeso0 = zeros(2,1);
+thetaAcel0 = zeros(2,1); 
 
 [theta0, J_history] = gradientDescent(trainingX, trainingY, theta0, alpha, iterations);
-[thetaDes0, J_historyDes] = gradientDescent(trainingX(:,3), trainingY, thetaDes0, alpha, iterations);
-[thetaPeso0, J_historyPeso] = gradientDescent(trainingX(:,5), trainingY, thetaPeso0, alpha, iterations);
-[thetaAcel0, J_historyAcel] = gradientDescent(trainingX(:,6), trainingY, thetaAcel0, alpha, iterations);
-
-figure;
-plot(1:numel(J_history), J_history, '-b','LineWidth',2);
-xlabel('Number of iterations');
-ylabel('Cost J');
+[thetaDes0, J_historyDes] = gradientDescent([ones(m,1) trainingX(:,3)], trainingY, thetaDes0, alpha, iterations);
+[thetaPeso0, J_historyPeso] = gradientDescent([ones(m,1) trainingX(:,5)], trainingY, thetaPeso0, alpha, iterations);
+[thetaAcel0, J_historyAcel] = gradientDescent([ones(m,1) trainingX(:,6)], trainingY, thetaAcel0, alpha, iterations);
 
 %theta0
 %thetaDes0
@@ -98,13 +87,13 @@ ylabel('Cost J');
 fprintf('Calculando y mostrando errores: \n\n');
 
 %JDes0 = computeCost(testX, testY, thetaDes0);
-JDes0 = J_historyDes(end);  
+JDes0 = computeCost([ones(a,1) testX(:,3)], testY, thetaDes0);
 
-JPeso0 = computeCost(testX, testY, thetaPeso0);
+JPeso0 = computeCost([ones(a,1) testX(:,5)], testY, thetaPeso0);
   
-JAcel0 = computeCost(testX, testY, thetaAcel0);
+JAcel0 = computeCost([ones(a,1) testX(:,6)], testY, thetaAcel0);
 
-J0 = computeCost(testX, testY, theta0);
+J0 = J_historyDes(end);
 
 JDes
 JDes0
@@ -117,3 +106,11 @@ JAcel0
 
 J
 J0
+
+
+% ======================= Ejercicio 5: Gráfica de COnvergencia =================
+
+figure;
+plot(1:numel(J_history), J_history, '-b','LineWidth',2);
+xlabel('Number of iterations');
+ylabel('Cost J');
