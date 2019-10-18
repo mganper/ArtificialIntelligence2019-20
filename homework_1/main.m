@@ -40,7 +40,7 @@ theta = zeros(n+1, 1);
 
 [thetaDes, thetaPeso, thetaAcel, theta] = normalEqn(trainingX,trainingY);
 
-fprintf('Calculando y mostrando errores: \n\n');
+fprintf('Calculando y mostrando errores: \n');
 % Usando el conjunto de test, calculamos el error...
 %   del modelo obtenido por la ecuacion normal.
 JDes = computeCost([ones(a,1) testX(:,3)], testY, thetaDes)
@@ -64,7 +64,7 @@ iterationsDes = 250;
 iterationsPeso = 300;
 iterationsAcel = 400;
 
-fprintf("Normalizando los datos...\n\n");
+fprintf("\nNormalizando los datos...\n\n");
 % Normalizamos los datos para facilitar la obtencion del alpha durante...
 %   el descenso del gradiente y evitar la convergencia a infinito del error.
 trainingX(:,2:end) = normalize(trainingX(:,2:end));
@@ -76,7 +76,7 @@ thetaDes0 = zeros(2,1);
 thetaPeso0 = zeros(2,1);
 thetaAcel0 = zeros(2,1); 
 
-fprintf('\nCalculando descenso del gradiente... \n\n');
+fprintf('Calculando descenso del gradiente... \n\n');
 
 [theta0, J_history] = gradientDescent(trainingX, trainingY, theta0, alpha, iterations);
 [thetaDes0, J_historyDes] = gradientDescent([ones(m,1) trainingX(:,3)], trainingY, thetaDes0, alphaDes, iterationsDes);
@@ -93,7 +93,7 @@ J0 = J_history(end);
 fprintf("################ || Con Atributo 2 || Con Atributo 4 || Con Atributo 5 || Conjunto Completo ||\n");
 fprintf("Error Ec. Normal ||    %.4f     ||    %.4f     ||    %.4f     ||       %.4f      ||\n", JDes, JPeso, JAcel, J);
 fprintf(" Error Gradiente ||     %.4f     ||     %.4f     ||    %.4f     ||       %.4f      ||\n", JDes0, JPeso0, JAcel0, J0);
-fprintf("      Alpha      ||      %d       ||      %d      ||      %d      ||         %d       ||\n", alphaDes, alphaPeso, alphaAcel, alpha);
+fprintf("      Alpha      ||      %d       ||      %d       ||      %d      ||        %d       ||\n", alphaDes, alphaPeso, alphaAcel, alpha);
 fprintf(" Nº Iteraciones  ||      %d       ||      %d       ||      %d       ||         %d       ||\n", iterationsDes, iterationsPeso, iterationsAcel, iterations);
 
 
