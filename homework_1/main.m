@@ -1,5 +1,9 @@
 %% Homework 1
 
+% Realizado por:
+%   Manuel Gandul Perez
+%   Sergio Luzuriaga Rodriguez
+
 %% Inicialización
 clear ; close all; clc
 
@@ -33,11 +37,13 @@ fprintf('Calculando ecuacion normal... \n\n');
 [m,n] = size(trainingX);
 [a,b] = size(testX);
 
+% Añadimos la columna de unos a X
 testX = [ones(a,1) testX];
 trainingX = [ones(m,1) trainingX];
 
 theta = zeros(n+1, 1);
 
+% Obtenemos el valor de theta para cada caso usando la ecuacion normal
 [thetaDes, thetaPeso, thetaAcel, theta] = normalEqn(trainingX,trainingY);
 
 fprintf('Calculando y mostrando errores: \n');
@@ -54,6 +60,7 @@ visualizandoDatos(data, thetaDes, thetaPeso, thetaAcel, theta);
 
 % ======================= Ejercicio 4: Descenso del Gradiente ==================
 
+% Inicializacion de parametros
 alpha = 0.08;
 alphaDes = 0.1;
 alphaPeso = 0.1;
@@ -65,6 +72,7 @@ iterationsPeso = 300;
 iterationsAcel = 400;
 
 fprintf("\nNormalizando los datos...\n\n");
+
 % Normalizamos los datos para facilitar la obtencion del alpha durante...
 %   el descenso del gradiente y evitar la convergencia a infinito del error.
 trainingX(:,2:end) = normalize(trainingX(:,2:end));
@@ -78,18 +86,28 @@ thetaAcel0 = zeros(2,1);
 
 fprintf('Calculando descenso del gradiente... \n\n');
 
-[theta0, J_history] = gradientDescent(trainingX, trainingY, theta0, alpha, iterations);
-[thetaDes0, J_historyDes] = gradientDescent([ones(m,1) trainingX(:,3)], trainingY, thetaDes0, alphaDes, iterationsDes);
-[thetaPeso0, J_historyPeso] = gradientDescent([ones(m,1) trainingX(:,5)], trainingY, thetaPeso0, alphaPeso, iterationsPeso);
-[thetaAcel0, J_historyAcel] = gradientDescent([ones(m,1) trainingX(:,6)], trainingY, thetaAcel0, alphaAcel, iterationsAcel);
+[theta0, J_history] = gradientDescent(trainingX, trainingY, theta0, ...
+alpha, iterations);
+
+[thetaDes0, J_historyDes] = gradientDescent([ones(m,1) trainingX(:,3)], ...
+trainingY, thetaDes0, alphaDes, iterationsDes);
+
+[thetaPeso0, J_historyPeso] = gradientDescent([ones(m,1) trainingX(:,5)], ...
+trainingY, thetaPeso0, alphaPeso, iterationsPeso);
+
+[thetaAcel0, J_historyAcel] = gradientDescent([ones(m,1) trainingX(:,6)], ...
+trainingY, thetaAcel0, alphaAcel, iterationsAcel);
 
 fprintf('Mostrando errores: \n\n');
 
+% Tomamos como error del modelo el ultimo error registrado en...
+%   J_history del descenso del gradiente
 JDes0 = J_historyDes(end);
 JPeso0 = J_historyPeso(end);
 JAcel0 = J_historyAcel(end);
 J0 = J_history(end);
 
+% Tabla que muestra la comparacion de los errores
 fprintf("################ || Con Atributo 2 || Con Atributo 4 || Con Atributo 5 || Conjunto Completo ||\n");
 fprintf("Error Ec. Normal ||    %.4f     ||    %.4f     ||    %.4f     ||       %.4f      ||\n", JDes, JPeso, JAcel, J);
 fprintf(" Error Gradiente ||     %.4f     ||     %.4f     ||    %.4f     ||       %.4f      ||\n", JDes0, JPeso0, JAcel0, J0);
