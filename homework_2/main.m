@@ -45,35 +45,90 @@ pause;
 theta = zeros(n+1, 1);
 
 alpha = 0.01;
-iterations = 10;
+iterations = 100;
 
 [theta, J_history] = gradientDescent(X, y, theta, alpha, iterations);
 
 % Plot Boundary
 % Only need 2 points to define a line, so choose two endpoints (min,max) of X1 and calculate X2
-plotDecisionBoundary(theta, X, y);
+%plotDecisionBoundary(theta, X, y);
+ 
     
 % Labels and Legend
-xlabel("Exam 1 score");
-ylabel("Exam 2 score");
-legend("Admitted", "Not Admitted", "Decision Boundary");
+%xlabel("Exam 1 score");
+%ylabel("Exam 2 score");
+%legend("Admitted", "Not Admitted", "Decision Boundary");
+
+p = predict(theta, X);
+fprintf("\nExactitud: %f \n", mean(p==y)*100);     %Porcentaje de acierto
 
 fprintf('\nProgram paused. Press enter to continue.\n\n');
 pause;
+
+%% ======================= Ejercicio 3: Modelo y frontera de decision ==========
+
+fprintf('\nAdding Attributes.\n\n');
+
+X = mapFeature(data(:,1), data(:,2));
+
+fprintf('\nProgram paused. Press enter to continue.\n\n');
+pause;
+
+[m, n] = size(X);
+%X = [ones(m,1) X];
+
+% Initialize fitting parameters
+
+
+% Compute and display initial cost and gradient
+%initial_theta = zeros(n+1, 1);
+
+initial_theta = zeros(n, 1);
+
+[cost, grad] = costFunction(initial_theta, X, y);
+
+fprintf('Cost at initial theta (zeros): %f\n', cost);
+fprintf('Gradient at initial theta (zeros): \n');
+fprintf(' %f \n', grad);
+
+fprintf('\nProgram paused. Press enter to continue.\n\n');
+pause;
+
+%theta = zeros(n+1, 1);
+
+theta = zeros(n, 1);
+
+[theta, J_history] = gradientDescent(X, y, theta, alpha, iterations);
+
+% Plot Boundary
+% Only need 2 points to define a line, so choose two endpoints (min,max) of X1 and calculate X2
+%plotDecisionBoundary(theta, X, y);
+ 
+    
+% Labels and Legend
+%xlabel("Exam 1 score");
+%ylabel("Exam 2 score");
+%legend("Admitted", "Not Admitted", "Decision Boundary");
+
+fprintf('\nProgram paused. Press enter to continue.\n\n');
+pause;
+
+
 
 %% ============== EJ5. Predict ==============
 %  Predict probability for a student with score 45 on exam 1 
 %  and score 85 on exam 2 
-prob = sigmoid([1 45 85] * theta)
+p = predict(theta, X);
+fprintf("\nExactitud: %f \n", mean(p==y)*100);     %Porcentaje de acierto
 
 
 %% ============== EJ6. Predict and Accuracies ==============
 % Compute accuracy on our training set
-p = predict(theta, X);
+%p = predict(theta, X);
 
-fprintf("\nExactitud: %f\n", mean(p==y)*100);     %Porcentaje de acierto
+%fprintf("\nExactitud: %f\n", mean(p==y)*100);     %Porcentaje de acierto
 
 
-fprintf('\nProgram paused. Press enter to continue.\n\n');
-pause;
+%fprintf('\nProgram paused. Press enter to continue.\n\n');
+%pause;
 
