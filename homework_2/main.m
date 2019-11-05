@@ -16,10 +16,6 @@ fprintf(['Plotting data...']);
 
 plotData(X, y);
 
-fprintf('\nProgram paused. Press enter to continue.\n');
-pause;
-
-
 %% ======================= Ejercicio 2: Modelo y frontera de decision ==========
 
 
@@ -35,44 +31,39 @@ initial_theta = zeros(n+1, 1);
 
 [cost, grad] = costFunction(initial_theta, X, y);
 
-fprintf('Cost at initial theta (zeros): %f\n', cost);
-fprintf('Gradient at initial theta (zeros): \n');
-fprintf(' %f \n', grad);
-
-fprintf('\nProgram paused. Press enter to continue.\n\n');
-pause;
+fprintf('\n\nCost at initial theta (zeros): %f\n', cost);
+%fprintf('Gradient at initial theta (zeros): \n');
+%fprintf(' %f \n', grad);
 
 theta = zeros(n+1, 1);
 
 alpha = 0.01;
-iterations = 100;
+iterations = 200;
 
+fprintf('\nAlpha: %.2f',alpha);
+fprintf('\nIterations: %d',iterations);
+fprintf('\nExecuting Gradient Descent...');
 [theta, J_history] = gradientDescent(X, y, theta, alpha, iterations);
 
+%Grafica de convergencia del error del descenso del gradiente.
+subplot(2,2,1); 
+plot(1:numel(J_history), J_history, '-b','LineWidth',2);
+xlabel('Number of iterations');
+ylabel('Cost J');
+
 % Plot Boundary
-% Only need 2 points to define a line, so choose two endpoints (min,max) of X1 and calculate X2
-%plotDecisionBoundary(theta, X, y);
+subplot(2,2,2);
+plotDecisionBoundary(theta, X, y);
  
-    
-% Labels and Legend
-%xlabel("Exam 1 score");
-%ylabel("Exam 2 score");
-%legend("Admitted", "Not Admitted", "Decision Boundary");
 
 p = predict(theta, X);
-fprintf("\nExactitud: %f \n", mean(p==y)*100);     %Porcentaje de acierto
-
-fprintf('\nProgram paused. Press enter to continue.\n\n');
-pause;
+fprintf("\nAccuracy: %.2f \n", mean(p==y)*100);     %Porcentaje de acierto
 
 %% ======================= Ejercicio 3: Modelo y frontera de decision ==========
 
-fprintf('\nAdding Attributes.\n\n');
+fprintf('\nApplying Map Feature...\n');
 
 X = mapFeature(data(:,1), data(:,2));
-
-fprintf('\nProgram paused. Press enter to continue.\n\n');
-pause;
 
 [m, n] = size(X);
 %X = [ones(m,1) X];
@@ -87,48 +78,34 @@ initial_theta = zeros(n, 1);
 
 [cost, grad] = costFunction(initial_theta, X, y);
 
-fprintf('Cost at initial theta (zeros): %f\n', cost);
-fprintf('Gradient at initial theta (zeros): \n');
-fprintf(' %f \n', grad);
-
-fprintf('\nProgram paused. Press enter to continue.\n\n');
-pause;
+%fprintf('Gradient at initial theta (zeros): \n');
+%fprintf(' %f \n', grad);
 
 %theta = zeros(n+1, 1);
 
 theta = zeros(n, 1);
 
+alpha = 0.0000007;
+iterations = 200;
+
+fprintf('\nAlpha: %.7f',alpha);
+fprintf('\nIterations: %d',iterations);
+fprintf('\nExecuting Gradient Descent...');
+
 [theta, J_history] = gradientDescent(X, y, theta, alpha, iterations);
 
+%Grafica de convergencia del error del descenso del gradiente.
+subplot(2,2,3);
+plot(1:numel(J_history), J_history, '-b','LineWidth',2);
+xlabel('Number of iterations');
+ylabel('Cost J');
+
 % Plot Boundary
-% Only need 2 points to define a line, so choose two endpoints (min,max) of X1 and calculate X2
-%plotDecisionBoundary(theta, X, y);
- 
-    
-% Labels and Legend
-%xlabel("Exam 1 score");
-%ylabel("Exam 2 score");
-%legend("Admitted", "Not Admitted", "Decision Boundary");
+subplot(2,2,4);
+plotDecisionBoundary(theta, X, y);
 
-fprintf('\nProgram paused. Press enter to continue.\n\n');
-pause;
-
-
-
-%% ============== EJ5. Predict ==============
-%  Predict probability for a student with score 45 on exam 1 
-%  and score 85 on exam 2 
+%% ============== Prediction ===================================================
 p = predict(theta, X);
-fprintf("\nExactitud: %f \n", mean(p==y)*100);     %Porcentaje de acierto
+fprintf("\nAccuracy: %.2f \n", mean(p==y)*100);     %Porcentaje de acierto
 
-
-%% ============== EJ6. Predict and Accuracies ==============
-% Compute accuracy on our training set
-%p = predict(theta, X);
-
-%fprintf("\nExactitud: %f\n", mean(p==y)*100);     %Porcentaje de acierto
-
-
-%fprintf('\nProgram paused. Press enter to continue.\n\n');
-%pause;
 
