@@ -19,7 +19,7 @@ function plot_decision_boundary(Theta1,Theta2, X, y)
     Z = reshape(Z,size(X1));
     % Plot the contour and examples
    
-    figure(2); % open a new figure window
+    figure(); % open a new figure window
      
     contour(X1,Y1,Z,'LineColor','b','LineWidth',3);
     hold on;
