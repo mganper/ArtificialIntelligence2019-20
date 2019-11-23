@@ -111,7 +111,7 @@ title("Neurons: 50");
 
 
 %% ================ EJ4. Neural Network Lambda Behavior ========================
-fprintf('\n================ EJ4. Neural Network Lambda Behavior ================\n');
+fprintf('\n\n================ EJ4. Neural Network Lambda Behavior ================\n');
 
 % Neuronas en la capa oculta: 10
 hidden_layer_size = 10;
