@@ -2,7 +2,7 @@ function execute(input_layer_size, hidden_layer_size, num_labels, X, y, lambda)
   
   initial_nn_params = generateThetas(input_layer_size, hidden_layer_size, num_labels);
   
-  options = optimset('MaxIter', 10);
+  options = optimset('MaxIter', 50);
 
   costFunction = @(p) nnCostFunction(p, ...
                                    input_layer_size,...

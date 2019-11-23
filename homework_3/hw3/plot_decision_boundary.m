@@ -30,6 +30,8 @@ function plot_decision_boundary(Theta1,Theta2, X, y)
     ylabel('x2');
     xlabel('x1');
     plotData(X,y);
+    legend("Decision boundary","X1","X2");
+    [m n] = size(Theta1);
 %     IP = (y == 1);%Indices positivos
 %     IN = (y == 0);%Indices negativos
 %     plot(X(IP,1), X(IP,2), 'bo', 'MarkerSize', 5);
