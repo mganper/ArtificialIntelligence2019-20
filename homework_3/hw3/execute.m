@@ -19,6 +19,6 @@ function execute(input_layer_size, hidden_layer_size, num_labels, X, y, lambda)
 
   p = predict(Theta1, Theta2, X);
 
-  fprintf("\nExactitud: %f\n", mean(p==y)*100);
+  fprintf("\n   Exactitud: %f\n\n", mean(p==y)*100);
   
 endfunction
