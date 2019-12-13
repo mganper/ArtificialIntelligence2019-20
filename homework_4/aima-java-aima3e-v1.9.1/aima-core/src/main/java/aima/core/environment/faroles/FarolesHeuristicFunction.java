@@ -13,6 +13,11 @@ import aima.core.search.framework.evalfunc.HeuristicFunction;
  */
 public class FarolesHeuristicFunction implements HeuristicFunction {
 
+    /**
+     * Se ha tomado como Heurística eliminar la restricción de 
+     * tener que volver con el farol al otro del puente para 
+     * seguir avanzando.
+     */
     @Override
     public double h(Object state) {
         FarolesBoard board = (FarolesBoard) state;

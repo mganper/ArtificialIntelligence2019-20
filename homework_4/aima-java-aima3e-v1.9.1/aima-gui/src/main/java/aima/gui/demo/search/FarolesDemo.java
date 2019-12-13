@@ -11,7 +11,8 @@ import aima.core.environment.faroles.FarolesGoalTest;
 import aima.core.environment.faroles.FarolesHeuristicFunction;
 import aima.core.search.framework.*;
 import aima.core.search.framework.problem.Problem;
-import aima.core.search.framework.qsearch.GraphSearch;
+import aima.core.search.framework.qsearch.TreeSearch;
+import aima.core.search.informed.AStarSearch;
 import aima.core.search.informed.GreedyBestFirstSearch;
 import aima.core.search.uninformed.BreadthFirstSearch;
 import aima.core.search.uninformed.DepthFirstSearch;
@@ -26,16 +27,17 @@ public class FarolesDemo {
             new int[]{1, 1, 1, 1, 1});
 
     public static void main(String[] args) {
-        mcBreadthDemo();
-        mcDepthGraphDemo();
+        farolesBreadthDemo();
+        farolesDepthGraphDemo();
         farolesGreedyBestFirstHeuristicDemo();
+        farolesAStarDemo();
     }
 
-    private static void mcBreadthDemo() {
+    private static void farolesBreadthDemo() {
         System.out.println("\nFarolesDemo breadth -->");
         try {
             Problem problem = new Problem(boardInicial, FarolesFunctionFactory.getActionsFunction(), FarolesFunctionFactory.getResultFunction(), new FarolesGoalTest());
-            SearchForActions search = new BreadthFirstSearch();
+            SearchForActions search = new BreadthFirstSearch(new TreeSearch());
             SearchAgent agent = new SearchAgent(problem, search);
             printActions(agent.getActions());
             printInstrumentation(agent.getInstrumentation());
@@ -45,11 +47,11 @@ public class FarolesDemo {
 
     }
 
-    private static void mcDepthGraphDemo() {
+    private static void farolesDepthGraphDemo() {
         System.out.println("\nFarolesDemo depth graph -->");
         try {
             Problem problem = new Problem(boardInicial, FarolesFunctionFactory.getActionsFunction(), FarolesFunctionFactory.getResultFunction(), new FarolesGoalTest());
-            SearchForActions search = new DepthFirstSearch(new GraphSearch());
+            SearchForActions search = new DepthFirstSearch(new TreeSearch());
             SearchAgent agent = new SearchAgent(problem, search);
             printActions(agent.getActions());
             printInstrumentation(agent.getInstrumentation());
@@ -64,7 +66,22 @@ public class FarolesDemo {
         try {
             Problem problem = new Problem(new FarolesBoard(), FarolesFunctionFactory.getActionsFunction(),
                     FarolesFunctionFactory.getResultFunction(), new FarolesGoalTest());
-            SearchForActions search = new GreedyBestFirstSearch(new GraphSearch(), new FarolesHeuristicFunction());
+            SearchForActions search = new GreedyBestFirstSearch(new TreeSearch(), new FarolesHeuristicFunction());
+            SearchAgent agent = new SearchAgent(problem, search);
+            printActions(agent.getActions());
+            printInstrumentation(agent.getInstrumentation());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private static void farolesAStarDemo() {
+        System.out.println("\nFarolesDemo AStar Search (Heuristic)-->");
+        try {
+            Problem problem = new Problem(new FarolesBoard(), FarolesFunctionFactory.getActionsFunction(),
+                    FarolesFunctionFactory.getResultFunction(), new FarolesGoalTest());
+            SearchForActions search = new AStarSearch(new TreeSearch(), new FarolesHeuristicFunction());
             SearchAgent agent = new SearchAgent(problem, search);
             printActions(agent.getActions());
             printInstrumentation(agent.getInstrumentation());
