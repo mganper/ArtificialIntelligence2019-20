@@ -1,6 +1,5 @@
 package aima.core.environment.selatt;
 
-import aima.core.environment.nqueens.*;
 import aima.core.search.framework.problem.GoalTest;
 
 /**

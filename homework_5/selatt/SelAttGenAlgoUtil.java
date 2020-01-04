@@ -8,15 +8,8 @@ import java.util.Random;
 import aima.core.search.framework.problem.GoalTest;
 import aima.core.search.local.FitnessFunction;
 import aima.core.search.local.Individual;
-import aima.core.util.datastructure.XYLocation;
 
 /**
- * A class whose purpose is to provide static utility methods for solving the
- * n-queens problem with genetic algorithms. This includes fitness function,
- * goal test, random creation of individuals and convenience methods for
- * translating between between an NQueensBoard representation and the Integer list
- * representation used by the GeneticAlgorithm.
- * 
  * @author Gandul Pérez, Manuel
  * @author Luzuriaga Rodríguez, Sergio
  * 
@@ -54,56 +47,37 @@ public class SelAttGenAlgoUtil {
 	public static class SelAttFitnessFunction implements FitnessFunction<Integer> {
 
                 @Override
-		public double apply(Individual<Integer> individual) {
-			double fitness = 0;
-                        
+		public double apply(Individual<Integer> individual) {                        
 			SelAttBoard board = getBoardForIndividual(individual);
-			int boardSize = board.getSize();
                         
                         double[][] correlations = board.correlations;
                         
                         int k = board.getNumberOfAttributes();
                         
-                        double rcl = 0;
-                        
                         List<Integer> attributes = board.getAttributes();
                         
-			// Calculate the number of non-attacking pairs of queens (refer to
-			// AIMA
-			// page 117).
+                        double rcl = 0;
                         
+                        for(int i = 0; i < attributes.size(); i++){
+                            rcl += correlations[9][attributes.get(i)];
+                        }
                         
+                        rcl /= k;
                         
-			List<XYLocation> qPositions = board.getQueenPositions();
-			for (int fromX = 0; fromX < (boardSize - 1); fromX++) {
-				for (int toX = fromX + 1; toX < boardSize; toX++) {
-					int fromY = qPositions.get(fromX).getYCoOrdinate();
-					boolean nonAttackingPair = true;
-					// Check right beside
-					int toY = fromY;
-					if (board.queenExistsAt(new XYLocation(toX, toY))) {
-						nonAttackingPair = false;
-					}
-					// Check right and above
-					toY = fromY - (toX - fromX);
-					if (toY >= 0) {
-						if (board.queenExistsAt(new XYLocation(toX, toY))) {
-							nonAttackingPair = false;
-						}
-					}
-					// Check right and below
-					toY = fromY + (toX - fromX);
-					if (toY < boardSize) {
-						if (board.queenExistsAt(new XYLocation(toX, toY))) {
-							nonAttackingPair = false;
-						}
-					}
-
-					if (nonAttackingPair) {
-						fitness += 1.0;
-					}
-				}
-			}
+                        double rat = 0;
+                        
+                        for(int i = 0; i < attributes.size(); i++){
+                            for(int j = i; j < attributes.size(); j++){
+                                rat += board.getCorrelationOf(attributes.get(i), attributes.get(j));
+                            }
+                        }
+                        
+                        rat /=  k;
+                        
+                        double upAux = k * rcl;
+                        double downAux = k + (k * (k - 1) * rat);
+                        
+                        double fitness = upAux / (Math.sqrt(downAux));
 
 			return fitness;
 		}

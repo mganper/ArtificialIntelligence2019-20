@@ -4,9 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Represents a quadratic board with a matrix of state on which queens can be
- * placed (only one per square) and moved.
- *
  * @author Gandul Pérez, Manuel
  * @author Luzuriaga Rodríguez, Sergio
  */
@@ -100,6 +97,10 @@ public class SelAttBoard {
         }
         return result;
 
+    }
+    
+    public double getCorrelationOf(int attOne, int attTwo){
+        return correlations[attOne][attTwo];
     }
 
     @Override

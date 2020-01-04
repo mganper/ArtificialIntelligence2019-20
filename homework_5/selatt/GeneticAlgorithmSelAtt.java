@@ -12,38 +12,6 @@ import aima.core.util.CancelableThread;
 import aima.core.util.Util;
 
 /**
- * Artificial Intelligence A Modern Approach (3rd Edition): Figure 4.8, page
- * 129.<br>
- * <br>
- *
- * <pre>
- * function GENETIC-ALGORITHM(population, FITNESS-FN) returns an individual
- *   inputs: population, a set of individuals
- *           FITNESS-FN, a function that measures the fitness of an individual
- *
- *   repeat
- *     new_population &lt;- empty set
- *     for i = 1 to SIZE(population) do
- *       x &lt;- RANDOM-SELECTION(population, FITNESS-FN)
- *       y &lt;- RANDOM-SELECTION(population, FITNESS-FN)
- *       child &lt;- REPRODUCE(x, y)
- *       if (small random probability) then child &lt;- MUTATE(child)
- *       add child to new_population
- *     population &lt;- new_population
- *   until some individual is fit enough, or enough time has elapsed
- *   return the best individual in population, according to FITNESS-FN
- * --------------------------------------------------------------------------------
- * function REPRODUCE(x, y) returns an individual
- *   inputs: x, y, parent individuals
- *
- *   n &lt;- LENGTH(x); c &lt;- random number from 1 to n
- *   return APPEND(SUBSTRING(x, 1, c), SUBSTRING(y, c+1, n))
- * </pre>
- *
- * Figure 4.8 A genetic algorithm. The algorithm is the same as the one
- * diagrammed in Figure 4.6, with one variation: in this more popular version,
- * each mating of two parents produces only one offspring, not two.
- *
  * @author Gandul Pérez, Manuel
  * @author Luzuriaga Rodríguez, Sergio
  *
