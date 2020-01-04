@@ -1,6 +1,5 @@
 package aima.core.environment.selatt;
 
-import aima.core.environment.nqueens.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -25,25 +24,25 @@ import aima.core.util.datastructure.XYLocation;
 public class SelAttGenAlgoUtil {
 
 	public static FitnessFunction<Integer> getFitnessFunction() {
-		return new NQueensFitnessFunction();
+		return new SelAttFitnessFunction();
 	}
 	
 	public static GoalTest getGoalTest() {
-		return new NQueensGenAlgoGoalTest();
+		return new SelAttGoalTest();
 	}
 	
 
 	public static Individual<Integer> generateRandomIndividual(int boardSize) {
-		List<Integer> individualRepresentation = new ArrayList<Integer>();
+		List<Integer> individualRepresentation = new ArrayList<>();
 		for (int i = 0; i < boardSize; i++) {
 			individualRepresentation.add(new Random().nextInt(boardSize));
 		}
-		Individual<Integer> individual = new Individual<Integer>(individualRepresentation);
+		Individual<Integer> individual = new Individual<>(individualRepresentation);
 		return individual;
 	}
 
 	public static Collection<Integer> getFiniteAlphabetForBoardOfSize(int size) {
-		Collection<Integer> fab = new ArrayList<Integer>();
+		Collection<Integer> fab = new ArrayList<>();
 
 		for (int i = 0; i < size; i++) {
 			fab.add(i);
@@ -52,17 +51,29 @@ public class SelAttGenAlgoUtil {
 		return fab;
 	}
 	
-	public static class NQueensFitnessFunction implements FitnessFunction<Integer> {
+	public static class SelAttFitnessFunction implements FitnessFunction<Integer> {
 
+                @Override
 		public double apply(Individual<Integer> individual) {
 			double fitness = 0;
-
-			NQueensBoard board = getBoardForIndividual(individual);
+                        
+			SelAttBoard board = getBoardForIndividual(individual);
 			int boardSize = board.getSize();
-
+                        
+                        double[][] correlations = board.correlations;
+                        
+                        int k = board.getNumberOfAttributes();
+                        
+                        double rcl = 0;
+                        
+                        List<Integer> attributes = board.getAttributes();
+                        
 			// Calculate the number of non-attacking pairs of queens (refer to
 			// AIMA
 			// page 117).
+                        
+                        
+                        
 			List<XYLocation> qPositions = board.getQueenPositions();
 			for (int fromX = 0; fromX < (boardSize - 1); fromX++) {
 				for (int toX = fromX + 1; toX < boardSize; toX++) {
@@ -98,8 +109,8 @@ public class SelAttGenAlgoUtil {
 		}
 	}
 
-	public static class NQueensGenAlgoGoalTest implements GoalTest {
-		private final NQueensGoalTest goalTest = new NQueensGoalTest();
+	public static class SelAttGenAlgoGoalTest implements GoalTest {
+		private final SelAttGoalTest goalTest = new SelAttGoalTest();
 
 		@SuppressWarnings("unchecked")
 		public boolean isGoalState(Object state) {
@@ -107,12 +118,13 @@ public class SelAttGenAlgoUtil {
 		}
 	}
 
-	public static NQueensBoard getBoardForIndividual(Individual<Integer> individual) {
+	public static SelAttBoard getBoardForIndividual(Individual<Integer> individual) {
 		int boardSize = individual.length();
-		NQueensBoard board = new NQueensBoard(boardSize);
+		SelAttBoard board = new SelAttBoard(boardSize);
+                
 		for (int i = 0; i < boardSize; i++) {
-			int pos = individual.getRepresentation().get(i);
-			board.addQueenAt(new XYLocation(i, pos));
+			int att = individual.getRepresentation().get(i);
+			board.useAttribute(att);
 		}
 
 		return board;

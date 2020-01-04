@@ -1,289 +1,169 @@
 package aima.core.environment.selatt;
 
-import aima.core.environment.nqueens.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
-
-import aima.core.util.datastructure.XYLocation;
 
 /**
- * Represents a quadratic board with a matrix of squares on which queens can be
+ * Represents a quadratic board with a matrix of state on which queens can be
  * placed (only one per square) and moved.
- * 
+ *
  * @author Gandul Pérez, Manuel
  * @author Luzuriaga Rodríguez, Sergio
  */
 public class SelAttBoard {
 
-	/** Parameters for initialization. */
-	public static enum Config {
-		EMPTY, QUEENS_IN_FIRST_ROW, QUEEN_IN_EVERY_COL
-	};
+    int[] state;
+    
+    public final double[][] correlations = new double[][] {
+        {1,         0.64491,    0.65459,    0.48636,    0.52182,    0.58730,    0.55843,    0.53583,    0.35003},
+        {0.64491,   1,          0.90688,    0.70558,    0.75180,    0.68680,    0.75572,    0.72286,    0.45869},
+        {0.65459,   0.90688,    1,          0.68308,    0.71967,    0.70961,    0.73595,    0.71945,    0.43891},
+        {0.48636,   0.70558,    0.68308,    1,          0.59960,    0.66505,    0.66672,    0.60335,    0.41763},
+        {0.52182,   0.75180,    0.71967,    0.59960,    1,          0.58126,    0.61610,    0.62888,    0.47910},
+        {0.58730,   0.68680,    0.70961,    0.66505,    0.58126,    1,          0.67590,    0.57736,    0.33874},
+        {0.55843,   0.75572,    0.73595,    0.66672,    0.61610,    0.67590,    1,          0.66588,    0.34417},
+        {0.53583,   0.72286,    0.71945,    0.60335,    0.62888,    0.57736,    0.66588,    1,          0.42834},
+        {0.35003,   0.45869,    0.43891,    0.41763,    0.47910,    0.33874,    0.34417,    0.42834,    1},
+        {0.71600,   0.81790,    0.81893,    0.69680,    0.68278,    0.81605,    0.75662,    0.71224,    0.42317}
+    };
 
-	/**
-	 * X---> increases left to right with zero based index Y increases top to
-	 * bottom with zero based index | | V
-	 */
-	int[][] squares;
+    int size;
 
-	int size;
+    /**
+     * Creates a board with <code>size</code> rows. Column indices start with 0.
+     */
+    public SelAttBoard(int size) {
+        this.size = size;
+        state = new int[size];
+        for (int i = 0; i < size; i++) {
+            state[i] = 0;
 
-	/**
-	 * Creates a board with <code>size</code> rows and size columns. Column and
-	 * row indices start with 0.
-	 */
-	public SelAttBoard(int size) {
-		this.size = size;
-		squares = new int[size][size];
-		for (int i = 0; i < size; i++) {
-			for (int j = 0; j < size; j++) {
-				squares[i][j] = 0;
-			}
-		}
-	}
+        }
+    }
 
-	/**
-	 * Creates a board with <code>size</code> rows and size columns. Column and
-	 * row indices start with 0.
-	 * 
-	 * @param config
-	 *            Controls whether the board is initially empty or contains some
-	 *            queens.
-	 */
-	public SelAttBoard(int size, Config config) {
-		this(size);
-		if (config == Config.QUEENS_IN_FIRST_ROW) {
-			for (int i = 0; i < size; i++)
-				addQueenAt(new XYLocation(i, 0));
-		} else if (config == Config.QUEEN_IN_EVERY_COL) {
-			Random r = new Random();
-			for (int i = 0; i < size; i++)
-				addQueenAt(new XYLocation(i, r.nextInt(size)));
-		}
-	}
+    public void clear() {
+        for (int i = 0; i < size; i++) {
+            state[i] = 0;
 
-	public void clear() {
-		for (int i = 0; i < size; i++) {
-			for (int j = 0; j < size; j++) {
-				squares[i][j] = 0;
-			}
-		}
-	}
+        }
+    }
 
-	public void setBoard(List<XYLocation> al) {
-		clear();
-		for (int i = 0; i < al.size(); i++) {
-			addQueenAt(al.get(i));
-		}
-	}
+    public void setBoard(List<Integer> atts) {
+        clear();
+        for (Integer att : atts) {
+            useAttribute(att);
+        }
+    }
 
-	public int getSize() {
-		return size;
-	}
+    public int getSize() {
+        return size;
+    }
 
-	/** Column and row indices start with 0! */
-	public void addQueenAt(XYLocation l) {
-		if (!(queenExistsAt(l)))
-			squares[l.getXCoOrdinate()][l.getYCoOrdinate()] = 1;
-	}
+    /**
+     * Add an attribute in the indicated index.
+     *
+     * @param index the number of the attribute.
+     */
+    public void useAttribute(int index) {
+        if (!isUsedAttribute(index)) {
+            state[index] = 1;
+        }
+    }
 
-	public void removeQueenFrom(XYLocation l) {
-		if (squares[l.getXCoOrdinate()][l.getYCoOrdinate()] == 1) {
-			squares[l.getXCoOrdinate()][l.getYCoOrdinate()] = 0;
-		}
-	}
+    public void removeAttribute(int index) {
+        if (isUsedAttribute(index)) {
+            state[index] = 0;
+        }
+    }
 
-	/**
-	 * Moves the queen in the specified column (x-value of <code>l</code>) to
-	 * the specified row (y-value of <code>l</code>). The action assumes a
-	 * complete-state formulation of the n-queens problem.
-	 * 
-	 * @param l
-	 */
-	public void moveQueenTo(XYLocation l) {
-		for (int i = 0; i < size; i++)
-			squares[l.getXCoOrdinate()][i] = 0;
-		squares[l.getXCoOrdinate()][l.getYCoOrdinate()] = 1;
-	}
+    public boolean isUsedAttribute(int index) {
+        return state[index] == 1;
+    }
 
-	public void moveQueen(XYLocation from, XYLocation to) {
-		if ((queenExistsAt(from)) && (!(queenExistsAt(to)))) {
-			removeQueenFrom(from);
-			addQueenAt(to);
-		}
-	}
+    public int getNumberOfAttributes() {
+        int count = 0;
+        for (int i = 0; i < size; i++) {
+            if (state[i] == 1) {
+                count++;
+            }
 
-	public boolean queenExistsAt(XYLocation l) {
-		return (queenExistsAt(l.getXCoOrdinate(), l.getYCoOrdinate()));
-	}
+        }
+        return count;
+    }
 
-	private boolean queenExistsAt(int x, int y) {
-		return (squares[x][y] == 1);
-	}
+    public List<Integer> getAttributes() {
+        ArrayList<Integer> result = new ArrayList<>();
+        for (int i = 0; i < size; i++) {
+            if (isUsedAttribute(i)) {
+                result.add(i);
+            }
+        }
+        return result;
 
-	public int getNumberOfQueensOnBoard() {
-		int count = 0;
-		for (int i = 0; i < size; i++) {
-			for (int j = 0; j < size; j++) {
-				if (squares[i][j] == 1)
-					count++;
-			}
-		}
-		return count;
-	}
+    }
 
-	public List<XYLocation> getQueenPositions() {
-		ArrayList<XYLocation> result = new ArrayList<XYLocation>();
-		for (int i = 0; i < size; i++) {
-			for (int j = 0; j < size; j++) {
-				if (queenExistsAt(i, j))
-					result.add(new XYLocation(i, j));
-			}
-		}
-		return result;
+    @Override
+    public int hashCode() {
+        List<Integer> inds = getAttributes();
+        int result = 17;
+        for (Integer ind : inds) {
+            result = 37 * ind.hashCode();
+        }
+        return result;
+    }
 
-	}
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if ((o == null) || (this.getClass() != o.getClass())) {
+            return false;
+        }
+        SelAttBoard aBoard = (SelAttBoard) o;
+        boolean retVal = true;
+        List<Integer> indexes = getAttributes();
 
-	public int getNumberOfAttackingPairs() {
-		int result = 0;
-		for (XYLocation location : getQueenPositions()) {
-			result += getNumberOfAttacksOn(location);
-		}
-		return result / 2;
-	}
+        for (Integer ind : indexes) {
+            if (!(aBoard.isUsedAttribute(ind))) {
+                retVal = false;
+            }
+        }
+        return retVal;
+    }
 
-	public int getNumberOfAttacksOn(XYLocation l) {
-		int x = l.getXCoOrdinate();
-		int y = l.getYCoOrdinate();
-		return numberOfHorizontalAttacksOn(x, y) + numberOfVerticalAttacksOn(x, y) + numberOfDiagonalAttacksOn(x, y);
-	}
+    public void print() {
+        System.out.println(getBoardPic());
+    }
 
-	public boolean isSquareUnderAttack(XYLocation l) {
-		int x = l.getXCoOrdinate();
-		int y = l.getYCoOrdinate();
-		return (isSquareHorizontallyAttacked(x, y) || isSquareVerticallyAttacked(x, y)
-				|| isSquareDiagonallyAttacked(x, y));
-	}
+    public String getBoardPic() {
+        StringBuilder buffer = new StringBuilder();
+        buffer.append("[");
+        for (int i = 0; (i < size); i++) { // row
+            if (isUsedAttribute(i)) {
+                buffer.append(" 1 ");
+            } else {
+                buffer.append(" 0 ");
+            }
+        }
+        buffer.append("]");
+        
+        return buffer.toString();
+    }
 
-	private boolean isSquareHorizontallyAttacked(int x, int y) {
-		return numberOfHorizontalAttacksOn(x, y) > 0;
-	}
-
-	private boolean isSquareVerticallyAttacked(int x, int y) {
-		return numberOfVerticalAttacksOn(x, y) > 0;
-	}
-
-	private boolean isSquareDiagonallyAttacked(int x, int y) {
-		return numberOfDiagonalAttacksOn(x, y) > 0;
-	}
-
-	private int numberOfHorizontalAttacksOn(int x, int y) {
-		int retVal = 0;
-		for (int i = 0; i < size; i++) {
-			if ((queenExistsAt(i, y)))
-				if (i != x)
-					retVal++;
-		}
-		return retVal;
-	}
-
-	private int numberOfVerticalAttacksOn(int x, int y) {
-		int retVal = 0;
-		for (int j = 0; j < size; j++) {
-			if ((queenExistsAt(x, j)))
-				if (j != y)
-					retVal++;
-		}
-		return retVal;
-	}
-
-	private int numberOfDiagonalAttacksOn(int x, int y) {
-		int retVal = 0;
-		int i;
-		int j;
-		// forward up diagonal
-		for (i = (x + 1), j = (y - 1); (i < size && (j > -1)); i++, j--) {
-			if (queenExistsAt(i, j))
-				retVal++;
-		}
-		// forward down diagonal
-		for (i = (x + 1), j = (y + 1); ((i < size) && (j < size)); i++, j++) {
-			if (queenExistsAt(i, j))
-				retVal++;
-		}
-		// backward up diagonal
-		for (i = (x - 1), j = (y - 1); ((i > -1) && (j > -1)); i--, j--) {
-			if (queenExistsAt(i, j))
-				retVal++;
-		}
-
-		// backward down diagonal
-		for (i = (x - 1), j = (y + 1); ((i > -1) && (j < size)); i--, j++) {
-			if (queenExistsAt(i, j))
-				retVal++;
-		}
-
-		return retVal;
-	}
-
-	@Override
-	public int hashCode() {
-		List<XYLocation> locs = getQueenPositions();
-		int result = 17;
-		for (XYLocation loc : locs) {
-			result = 37 * loc.hashCode();
-		}
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object o) {
-		if (this == o)
-			return true;
-		if ((o == null) || (this.getClass() != o.getClass()))
-			return false;
-		SelAttBoard aBoard = (SelAttBoard) o;
-		boolean retVal = true;
-		List<XYLocation> locs = getQueenPositions();
-
-		for (XYLocation loc : locs) {
-			if (!(aBoard.queenExistsAt(loc)))
-				retVal = false;
-		}
-		return retVal;
-	}
-
-	public void print() {
-		System.out.println(getBoardPic());
-	}
-
-	public String getBoardPic() {
-		StringBuffer buffer = new StringBuffer();
-		for (int row = 0; (row < size); row++) { // row
-			for (int col = 0; (col < size); col++) { // col
-				if (queenExistsAt(col, row))
-					buffer.append(" Q ");
-				else
-					buffer.append(" - ");
-			}
-			buffer.append("\n");
-		}
-		return buffer.toString();
-	}
-
-	@Override
-	public String toString() {
-		StringBuffer buf = new StringBuffer();
-		for (int row = 0; row < size; row++) { // rows
-			for (int col = 0; col < size; col++) { // columns
-				if (queenExistsAt(col, row))
-					buf.append('Q');
-				else
-					buf.append('-');
-			}
-			buf.append("\n");
-		}
-		return buf.toString();
-	}
+    @Override
+    public String toString() {
+        StringBuilder buffer = new StringBuilder();
+        buffer.append("[");
+        for (int i = 0; (i < size); i++) { // row
+            if (isUsedAttribute(i)) {
+                buffer.append(" 1 ");
+            } else {
+                buffer.append(" 0 ");
+            }
+        }
+        buffer.append("]");
+        
+        return buffer.toString();
+    }
 }
