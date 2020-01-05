@@ -305,11 +305,11 @@ public class GeneticAlgorithmSelAtt<A> {
         // c <- random number from 1 to n
         int c = randomOffset(individualLength);
         // return APPEND(SUBSTRING(x, 1, c), SUBSTRING(y, c+1, n))
-        
+
         List<A> childRepresentation = new ArrayList<A>();
-        
-        for(int i = 0; i < x.getRepresentation().size(); i++){
-            if(random.nextBoolean()){
+
+        for (int i = 0; i < x.getRepresentation().size(); i++) {
+            if (random.nextBoolean()) {
                 childRepresentation.add(x.getRepresentation().get(i));
             } else {
                 childRepresentation.add(y.getRepresentation().get(i));

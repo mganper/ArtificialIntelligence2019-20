@@ -8,7 +8,7 @@ import aima.core.search.framework.problem.GoalTest;
  */
 public class SelAttGoalTest implements GoalTest {
 
-	public boolean isGoalState(Object state) {
-		return false;
-	}
+    public boolean isGoalState(Object state) {
+        return false;
+    }
 }
